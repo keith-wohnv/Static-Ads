@@ -44,20 +44,20 @@ This project takes a **brand name + website URL** and automatically:
 |---|---|
 | **Claude Code** | Anthropic's CLI tool — this is the AI that orchestrates the entire pipeline. Install from [claude.ai/code](https://claude.ai/code) |
 | **Node.js 18+** | Required for the image generation and gallery scripts. Download from [nodejs.org](https://nodejs.org) |
+| **Firecrawl CLI** | Website scraper used in Phase 1 brand research. Install globally: `npm install -g firecrawl-cli` |
 | **VS Code** (recommended) | Claude Code runs inside VS Code as an extension. You can also use the standalone CLI |
 
 ### API Keys
 
-You need **one** API key (the primary image generator):
+You need **two** API keys to run the full pipeline:
 
 | Service | What It Does | How to Get It |
 |---|---|---|
+| **Firecrawl API** (required) | Scrapes brand websites + takes full-page screenshots in Phase 1 | [firecrawl.dev](https://firecrawl.dev) — sign up for a free account, get your API key from the dashboard |
 | **Google Gemini API** (required) | Generates ad images from text prompts | [aistudio.google.com](https://aistudio.google.com) — create a project, enable the Generative Language API, create an API key |
 | **FAL.ai API** (optional backup) | Backup image generator if Gemini is down | [fal.ai](https://fal.ai) — sign up, add credits, get API key from dashboard |
 
-### Claude Code Skills/MCP Servers
-
-The project uses two **Firecrawl** tools for brand research (website scraping and screenshots). Firecrawl should be available as an MCP server or skill in your Claude Code setup. If you don't have Firecrawl configured, Claude Code can still do brand research using web search — it just won't get full-page screenshots automatically.
+> **Firecrawl free tier** is enough to get started and test the pipeline. If this becomes your daily driver, you'll want a paid plan for higher rate limits — or integrate another scraping service.
 
 ---
 
@@ -88,7 +88,7 @@ Static Ads v2/
 └── .env.example                         # Rename to .env and add your API keys
 ```
 
-### Step 2: Install the One Dependency
+### Step 2: Install Dependencies
 
 Open a terminal in the project folder and run:
 
@@ -96,9 +96,21 @@ Open a terminal in the project folder and run:
 npm install
 ```
 
-This installs the `xlsx` package (used to generate Excel files for Ads Uploader). Everything else uses Node.js built-in modules — no other packages needed.
+This installs the `xlsx` package (used to generate Excel files for Ads Uploader). Everything else uses Node.js built-in modules.
 
-### Step 3: Add Your API Keys
+### Step 3: Install & Authenticate Firecrawl CLI
+
+Firecrawl is used in Phase 1 to scrape brand websites and take full-page screenshots. Install it globally and authenticate:
+
+```bash
+npm install -g firecrawl-cli
+firecrawl auth
+# Paste your Firecrawl API key when prompted
+```
+
+Get your API key at [firecrawl.dev](https://firecrawl.dev) — the free account is enough to get started. If this becomes your daily driver, you'll want a paid plan for higher rate limits or to integrate another scraping service.
+
+### Step 4: Add Your API Keys
 
 Rename `.env.example` to `.env` and replace the placeholder values with your real API keys:
 
@@ -110,7 +122,7 @@ GEMINI_KEY=your-gemini-api-key-here
 FAL_KEY=your-fal-api-key-here
 ```
 
-### Step 4: Open the Project in Claude Code
+### Step 5: Open the Project in Claude Code
 
 Open the project folder in VS Code with the Claude Code extension, or navigate to it in the Claude Code CLI:
 
